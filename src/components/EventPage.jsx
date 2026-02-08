@@ -2,6 +2,8 @@ import React, { use, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrEvent } from '../Redux/dataSlice';
+import TicketCountSelection from './TicketCountSelection';
+import TermsAndConditions from "./TermsAndConditions"
 
 const EventPage = () => {
 
@@ -12,15 +14,15 @@ const EventPage = () => {
 
     const dispatch = useDispatch();
 
+    const [open, setOpen] = useState(false);
+    const [topen, setTOpen] = useState(false);
+
+
     useEffect(() => {
         const data = eventsData.find((e) => e.id == id)
 
         dispatch(setCurrEvent(data));
     }, [id])
-
-    useEffect(() => {
-        console.log(currEvent)
-    }, [currEvent])
 
   return (
     currEvent != undefined && <div className='w-full flex flex-col items-center justify-center mt-40'>
@@ -46,7 +48,7 @@ const EventPage = () => {
                     <div className='border-[1px] border-gray-400'></div>
                     <div className='flex flex-row items-center justify-between gap-3'>
                         <p className='text-[1.3vw]'>₹ {currEvent.price}</p>
-                        <button style={{ cursor : "pointer" }} className='px-4 py-3 rounded-xl bg-[#0077B6] hover:bg-[#03045E] text-white text-[1vw]'>Book Now</button>
+                        <button onClick={() => setOpen(true)} style={{ cursor : "pointer" }} className='px-4 py-3 rounded-xl bg-[#0077B6] hover:bg-[#03045E] text-white text-[1vw]'>Book Now</button>
                     </div>
                 </div>
             </div>
@@ -58,6 +60,36 @@ const EventPage = () => {
             </div>
 
         </div>
+        {open && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+                
+                {/* Background overlay */}
+                <div
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                onClick={() => setOpen(false)}
+                />
+
+                {/* Modal content */}
+                <div className="relative z-10 bg-white rounded-2xl p-6 w-[30vw]">
+                <TicketCountSelection onClose={() => setOpen(false)} price={currEvent.price} openTerms={() => setTOpen(true)} />
+                </div>
+
+            </div>
+        )}
+        {topen && (
+            <div className="fixed inset-0 z-20 flex items-center justify-center">
+                
+                {/* Background overlay */}
+                <div
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                onClick={() => setOpen(false)}
+                />
+                <TermsAndConditions onClose={() => setTOpen(false)} />
+
+            </div>
+        )}
+
+
     </div>
   )
 }
