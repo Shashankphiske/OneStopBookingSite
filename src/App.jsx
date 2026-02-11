@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
 import EventPage from './components/EventPage'
 import BookingPage from './components/BookingPage'
+import MyBookings from './components/MyBookings'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={ <Home /> } />
         <Route path="/events/:id" element={ <EventPage /> } />
         <Route path='/booking' element={ <BookingPage /> } />
+        <Route path='/my-bookings' element={ <MyBookings /> } />
       </Routes>
       <Footer />
     </BrowserRouter>

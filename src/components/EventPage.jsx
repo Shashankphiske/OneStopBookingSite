@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setCurrEvent } from '../Redux/dataSlice';
 import TicketCountSelection from './TicketCountSelection';
 import TermsAndConditions from "./TermsAndConditions"
+import LoginModal from './LoginModal';
 
 const EventPage = () => {
 
@@ -11,11 +12,21 @@ const EventPage = () => {
 
     const eventsData = useSelector((state) => state.data.eventsData);
     const currEvent = useSelector((state) => state.data.currEvent);
+    const currentUser = useSelector((state) => state.data.currentUser);
 
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState(false);
     const [topen, setTOpen] = useState(false);
+    const [loginOpen, setLoginOpen] = useState(false);
+
+    const handleBookNow = () => {
+        if (currentUser) {
+            setOpen(true);
+        } else {
+            setLoginOpen(true);
+        }
+    }
 
 
     useEffect(() => {
@@ -34,7 +45,7 @@ const EventPage = () => {
             </div>
             <div className='flex flex-row gap-10 w-full'>
                 <div className=' rounded-xl'>
-                    <img src={currEvent.bannerimg} alt="" className='rounded-xl w-[50vw] h-auto'/>
+                    <img src={currEvent.bannerimg} alt="" className='rounded-xl w-[50vw] h-[28vw] object-cover'/>
                 </div>
                 <div className='flex flex-col w-[20vw] p-5 rounded-xl border-2 border-gray-200 gap-3 justify-between text-[1vw]'>
                     <p>Date : {currEvent.date}</p>
@@ -48,10 +59,10 @@ const EventPage = () => {
                     <div className='border-[1px] border-gray-400'></div>
                     <div className='flex flex-row items-center justify-between gap-3'>
                         <p className='text-[1.3vw]'>₹ {currEvent.price}</p>
-                        <button onClick={() => setOpen(true)} style={{ cursor : "pointer" }} className='px-4 py-3 rounded-xl bg-[#0077B6] hover:bg-[#03045E] text-white text-[1vw]'>Book Now</button>
+                        <button onClick={handleBookNow} style={{ cursor : "pointer" }} className='px-4 py-3 rounded-xl bg-[#0077B6] hover:bg-[#03045E] text-white text-[1vw]'>Book Now</button>
                     </div>
                 </div>
-            </div>
+        </div>
 
             <div className='flex flex-col gap-5 w-[40vw]'>
                 <p className='text-[1.4vw]'>About The Event</p>
@@ -89,6 +100,14 @@ const EventPage = () => {
             </div>
         )}
 
+
+
+        {loginOpen && (
+            <LoginModal 
+                onClose={() => setLoginOpen(false)} 
+                onLoginSuccess={() => setOpen(true)} 
+            />
+        )}
 
     </div>
   )
